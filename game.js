@@ -1,6 +1,10 @@
 (() => {
   "use strict";
 
+  const isEmbedded =
+    new URLSearchParams(window.location.search).get("embed") === "1";
+  document.documentElement.classList.toggle("is-embedded", isEmbedded);
+
   const canvas = document.querySelector("#game-canvas");
   const context = canvas.getContext("2d");
   const overlay = document.querySelector("#game-overlay");

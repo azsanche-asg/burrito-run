@@ -539,6 +539,18 @@ h1 {
   font-size: 0.67rem;
 }
 
+.studio-link {
+  color: var(--clay-dark);
+  font-weight: 750;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.studio-link:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 4px;
+}
+
 .instructions strong {
   margin-right: 4px;
   color: var(--ink);
@@ -710,4 +722,125 @@ body.calm-mode *,
 body.calm-mode *::before,
 body.calm-mode *::after {
   transition-duration: 0.01ms !important;
+}
+
+html.is-embedded,
+html.is-embedded body {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+html.is-embedded body {
+  background: #f8d38b;
+}
+
+html.is-embedded .page-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html.is-embedded .game-header {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  z-index: 4;
+  display: block;
+  margin: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+html.is-embedded .brand-lockup {
+  display: none;
+}
+
+html.is-embedded .scoreboard {
+  padding: 7px 12px;
+  border: 1px solid rgba(82, 48, 32, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 248, 233, 0.72);
+  box-shadow: 0 5px 18px rgba(92, 50, 29, 0.08);
+  backdrop-filter: blur(5px);
+}
+
+html.is-embedded .game-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html.is-embedded #game-canvas {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+html.is-embedded #record-button,
+html.is-embedded .recording-result,
+html.is-embedded .recording-status,
+html.is-embedded .instructions {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  html.is-embedded .game-header {
+    top: 8px;
+  }
+
+  html.is-embedded .scoreboard {
+    gap: 8px;
+    padding: 5px 7px;
+  }
+}
+
+@media (max-height: 360px) {
+  html.is-embedded .game-header,
+  html.is-embedded #pause-button,
+  html.is-embedded #motion-button {
+    display: none;
+  }
+
+  html.is-embedded .game-overlay {
+    padding: 8px;
+  }
+
+  html.is-embedded .overlay-card {
+    width: min(290px, 82%);
+    padding: 10px 14px 12px;
+    border-radius: 14px;
+  }
+
+  html.is-embedded .overlay-kicker {
+    font-size: 0.56rem;
+  }
+
+  html.is-embedded .overlay-card h2 {
+    margin: 2px 0 4px;
+    font-size: clamp(1.45rem, 7vw, 2rem);
+  }
+
+  html.is-embedded .overlay-card p,
+  html.is-embedded .key-hint {
+    display: none;
+  }
+
+  html.is-embedded .career-stats {
+    margin: 5px 0 7px;
+  }
+
+  html.is-embedded .career-stats span {
+    padding-block: 3px;
+  }
+
+  html.is-embedded #action-button {
+    margin-top: 0;
+    padding: 8px 15px;
+  }
 }

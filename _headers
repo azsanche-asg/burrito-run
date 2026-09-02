@@ -1,0 +1,5 @@
+/*
+  Content-Security-Policy: frame-ancestors 'self' https://burritoslabs.com https://www.burritoslabs.com
+  Permissions-Policy: camera=(), geolocation=(), microphone=()
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff

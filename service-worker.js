@@ -1,4 +1,4 @@
-const CACHE_NAME = "burrito-run-v8";
+const CACHE_NAME = "burrito-run-v9";
 const CORE_ASSETS = [
   "./",
   "./index.html",
