@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Burrito Run — help a brave little donkey race across the desert."
+    />
+    <meta name="theme-color" content="#f4b75c" />
+    <title>Burrito Run</title>
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link
+      rel="preload"
+      href="assets/sprites/burrito-donkey-atlas.png"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="assets/sprites/desert-hazards-atlas.png"
+      as="image"
+    />
+    <link
+      rel="preload"
+      href="assets/sprites/story-rewards-atlas.png"
+      as="image"
+    />
+    <link rel="preload" href="assets/sprites/paisano-sleeping.png" as="image" />
+    <link rel="preload" href="assets/sprites/paisano-sombrero.png" as="image" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="game-header">
+        <div class="brand-lockup">
+          <span class="eyebrow">A tiny desert adventure</span>
+          <h1>Burrito Run</h1>
+        </div>
+
+        <div class="scoreboard" aria-label="Game score">
+          <span>Score <strong id="score">00000</strong></span>
+          <span>Best <strong id="best-score">00000</strong></span>
+        </div>
+      </header>
+
+      <section class="game-frame" aria-label="Burrito Run game">
+        <canvas
+          id="game-canvas"
+          width="960"
+          height="540"
+          tabindex="0"
+          aria-label="Burrito Run. Jump over hazards, collect cargo, and rescue sleeping paisanos."
+        ></canvas>
+
+        <div class="run-status" aria-label="Journey status">
+          <span><small>Trail</small><strong id="biome-label">Desert</strong></span>
+          <span><small>Cargo</small><strong id="cargo-label">3 / 3</strong></span>
+          <span><small>Rescued</small><strong id="rescue-label">0</strong></span>
+          <span class="destination-status"><small>Next</small><strong id="destination-label">Oasis · 90m</strong></span>
+        </div>
+
+        <div class="game-tools" aria-label="Game settings">
+          <button id="pause-button" type="button" disabled>Pause</button>
+          <button id="sound-button" type="button" aria-pressed="true">Sound on</button>
+          <button id="motion-button" type="button" aria-pressed="false">Calm off</button>
+          <button id="record-button" type="button" aria-pressed="false">Record 1 min</button>
+        </div>
+
+        <div class="game-overlay" id="game-overlay">
+          <div class="overlay-card">
+            <span class="overlay-kicker" id="overlay-kicker">The trail awaits</span>
+            <h2 id="overlay-title">Ready, Burrito?</h2>
+            <p id="overlay-message">
+              Carry your precious cargo safely across the desert.
+            </p>
+            <div class="career-stats" aria-label="Career statistics">
+              <span><small>Runs</small><strong id="stat-runs">0</strong></span>
+              <span><small>Paisanos</small><strong id="stat-rescues">0</strong></span>
+              <span><small>Places</small><strong id="stat-destinations">0</strong></span>
+            </div>
+            <button id="action-button" type="button">Start running</button>
+            <span class="key-hint">Space / ↑ / tap to jump</span>
+          </div>
+        </div>
+
+        <div class="pause-overlay" id="pause-overlay" hidden>
+          <div class="pause-card">
+            <span class="overlay-kicker">Taking a breather</span>
+            <h2>Trail paused</h2>
+            <p>Your cargo is safe. Press P, Escape, Space, or resume when ready.</p>
+            <button id="resume-button" type="button">Resume journey</button>
+          </div>
+        </div>
+
+        <div class="event-toast" id="event-toast" role="status" aria-live="polite"></div>
+        <div class="mobile-jump-hint" aria-hidden="true">Tap anywhere to jump</div>
+      </section>
+
+      <section
+        class="recording-result"
+        id="recording-result"
+        aria-labelledby="recording-title"
+        hidden
+      >
+        <div class="recording-copy">
+          <span class="recording-kicker">Saved locally</span>
+          <strong id="recording-title">Your run is ready</strong>
+          <span id="recording-summary">Preview it or download the clip.</span>
+        </div>
+        <video id="recording-preview" controls playsinline preload="metadata"></video>
+        <a id="recording-download" class="recording-download" download>
+          Download recording
+        </a>
+        <button id="recording-dismiss" class="recording-dismiss" type="button">
+          Close
+        </button>
+      </section>
+
+      <p class="recording-status" id="recording-status" role="status" aria-live="polite"></p>
+
+      <footer class="instructions">
+        <p><strong>Jump</strong> Space, ↑, W, or tap · <strong>Pause</strong> P / Esc</p>
+        <p><strong>Mission</strong> Protect cargo · rescue paisanos · find destinations</p>
+        <span class="release-tag">v1.1</span>
+      </footer>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>

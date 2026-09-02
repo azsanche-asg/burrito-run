@@ -1,0 +1,20 @@
+{
+  "name": "Burrito Run",
+  "short_name": "Burrito Run",
+  "description": "Help a brave little donkey carry precious cargo across an endless Southwest trail.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fff8e9",
+  "theme_color": "#f4b75c",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "assets/burrito-run-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
