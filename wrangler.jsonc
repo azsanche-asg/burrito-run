@@ -1,0 +1,13 @@
+{
+  "name": "burrito-run",
+  "compatibility_date": "2026-09-02",
+  "assets": {
+    "directory": "."
+  },
+  "routes": [
+    {
+      "pattern": "run.burritoslabs.com",
+      "custom_domain": true
+    }
+  ]
+}
