@@ -97,7 +97,9 @@ connection in browsers that support service workers. `manifest.webmanifest` and 
 app icon also let compatible browsers install Burrito Run as a standalone game.
 
 When changing a cached release, update `CACHE_NAME` in `service-worker.js` so existing
-players receive a fresh cache.
+players receive a fresh cache. Keep the versioned stylesheet and script URLs in
+`index.html` aligned with `CORE_ASSETS`. Versioned URLs prevent an older worker from
+mixing a new challenge page with the previous game's cached code or styles.
 
 ## Static hosting
 
