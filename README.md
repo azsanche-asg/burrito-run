@@ -64,6 +64,31 @@ Recordings are created entirely in the browser and are never uploaded. Download 
 clip before reloading or closing the page if you want to keep it. Browsers without
 Canvas capture or MediaRecorder support show the recording control as unavailable.
 
+## Challenge a friend
+
+After a completed run, the result screen shows that run's score, distance, and
+rescues. **Challenge a friend** opens the device's native share sheet when supported,
+or copies the result and a playable link. **Copy link** copies only the URL. If
+clipboard access is unavailable, a selected, read-only text field lets the player
+copy manually. Cancelling the share sheet does not copy anything.
+
+Challenge links use `?challenge=1&score=515&distance=225&rescues=2`. Friends see the
+target before playing and receive a win, tie, or retry message after their run.
+Score determines the winner; distance and rescues provide context. A target stays
+active across retries and can be dismissed with **Play without a target**.
+
+These are informal challenges: results travel in the URL, are not authenticated,
+and never update local career records. Every run still generates its own trail.
+There are no accounts, server requests for challenges, or public leaderboards.
+Malformed, unsupported, and out-of-range challenge values are ignored.
+
+`challenge=1` identifies the current scoring rules and link format. If the scoring
+rules change incompatibly, update this version and its tests. New links always
+point to the public game, including when shared from the studio's embedded game.
+
+Run the focused sharing tests with `node --test tests/*.test.mjs`. Test files and
+development configuration are excluded from the deployed assets.
+
 ## Offline play and installation
 
 On the first online visit, `service-worker.js` caches the game shell and all sprite
@@ -85,6 +110,7 @@ server-side runtime.
 - `index.html` — accessible game shell and HUD
 - `styles.css` — responsive page, overlay, and interface styles
 - `game.js` — game loop, physics, collisions, procedural obstacles, and rendering
+- `challenge.js` — validated challenge links, result comparison, and sharing fallbacks
 - `manifest.webmanifest` — installable app metadata
 - `service-worker.js` — offline asset cache and navigation fallback
 - `assets/burrito-run-icon.svg` — standalone app icon

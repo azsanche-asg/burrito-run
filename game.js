@@ -34,6 +34,25 @@
   const statRunsLabel = document.querySelector("#stat-runs");
   const statRescuesLabel = document.querySelector("#stat-rescues");
   const statDestinationsLabel = document.querySelector("#stat-destinations");
+  const gameFrame = document.querySelector(".game-frame");
+  const careerStats = document.querySelector("#career-stats");
+  const runSummary = document.querySelector("#run-summary");
+  const resultScore = document.querySelector("#result-score");
+  const resultDistance = document.querySelector("#result-distance");
+  const resultRescues = document.querySelector("#result-rescues");
+  const challengeTarget = document.querySelector("#challenge-target");
+  const challengeTargetSummary = document.querySelector("#challenge-target-summary");
+  const dismissChallenge = document.querySelector("#dismiss-challenge");
+  const challengeFeedback = document.querySelector("#challenge-feedback");
+  const shareActions = document.querySelector("#share-actions");
+  const shareButton = document.querySelector("#share-challenge");
+  const copyButton = document.querySelector("#copy-challenge");
+  const shareStatus = document.querySelector("#share-status");
+  const shareFallback = document.querySelector("#share-fallback");
+  const challengeCopyText = document.querySelector("#challenge-copy-text");
+  let incomingChallenge = BurritoRunChallenge.parse(window.location.search);
+  let completedShareData = null;
+  let shareGeneration = 0;
 
   const VIEW = Object.freeze({ width: 960, height: 540, groundY: 422 });
   const MAX_CARGO = 3;
@@ -292,6 +311,18 @@
   }
 
   function resetGame() {
+    completedShareData = null;
+    shareGeneration += 1;
+    shareActions.hidden = true;
+    shareFallback.hidden = true;
+    shareStatus.textContent = "";
+    challengeCopyText.value = "";
+    shareButton.disabled = false;
+    copyButton.disabled = false;
+    runSummary.hidden = true;
+    careerStats.hidden = false;
+    challengeFeedback.hidden = true;
+    gameFrame.classList.remove("is-finished");
     game.elapsed = 0;
     game.distance = 0;
     game.bonusScore = 0;
@@ -352,13 +383,66 @@
     const paisanoWord = game.rescues === 1 ? "paisano" : "paisanos";
     overlayMessage.textContent = `You traveled ${Math.floor(game.distance)} meters and rescued ${game.rescues} ${paisanoWord}. The trail is ready for another try.`;
     actionButton.textContent = "Run again";
+    const result = { score: currentScore(), distance: Math.floor(game.distance), rescues: game.rescues };
+    completedShareData = BurritoRunChallenge.createShareData(result);
+    resultScore.textContent = BurritoRunChallenge.formatNumber(result.score);
+    resultDistance.textContent = `${BurritoRunChallenge.formatNumber(result.distance)} m`;
+    resultRescues.textContent = BurritoRunChallenge.formatNumber(result.rescues);
+    runSummary.hidden = false;
+    careerStats.hidden = true;
+    shareActions.hidden = !completedShareData;
+    if (incomingChallenge) {
+      challengeFeedback.textContent = BurritoRunChallenge.compare(result.score, incomingChallenge);
+      challengeFeedback.hidden = false;
+    }
 
     window.setTimeout(() => {
       if (game.state === "gameover") {
+        gameFrame.classList.add("is-finished");
         overlay.hidden = false;
         actionButton.focus({ preventScroll: true });
       }
     }, 320);
+  }
+
+  function renderChallengeTarget() {
+    challengeTarget.hidden = !incomingChallenge;
+    if (incomingChallenge) {
+      const { score, distance, rescues } = incomingChallenge;
+      challengeTargetSummary.textContent = `Beat ${BurritoRunChallenge.formatNumber(score)} points · ${BurritoRunChallenge.formatNumber(distance)} m · ${BurritoRunChallenge.formatNumber(rescues)} ${rescues === 1 ? "rescue" : "rescues"}`;
+    }
+    if (game.state === "ready") {
+      overlayKicker.textContent = incomingChallenge ? "A friendly challenge" : "The trail awaits";
+      actionButton.textContent = incomingChallenge ? "Take the challenge" : "Start running";
+    }
+  }
+
+  async function shareCompletedRun(copyLinkOnly = false) {
+    if (!completedShareData || shareButton.disabled) return;
+    const data = completedShareData;
+    const generation = shareGeneration;
+    shareButton.disabled = true;
+    copyButton.disabled = true;
+    shareStatus.textContent = "";
+    shareFallback.hidden = true;
+    const outcome = copyLinkOnly
+      ? await BurritoRunChallenge.copy(data.url, navigator)
+      : await BurritoRunChallenge.share(data, navigator);
+    // Ignore a late response if the player has already started another run.
+    if (generation !== shareGeneration) return;
+    shareButton.disabled = false;
+    copyButton.disabled = false;
+    if (outcome === "copied") {
+      shareStatus.textContent = copyLinkOnly ? "Challenge link copied. Send it to a friend!" : "Challenge copied. Send it to a friend!";
+    } else if (outcome === "cancelled") {
+      shareStatus.textContent = "Sharing cancelled. Your result is still here.";
+    } else if (outcome === "manual") {
+      shareStatus.textContent = "Select and copy the challenge below to send it to a friend.";
+      challengeCopyText.value = copyLinkOnly ? data.url : `${data.text}\n${data.url}`;
+      shareFallback.hidden = false;
+      challengeCopyText.focus({ preventScroll: true });
+      challengeCopyText.select();
+    }
   }
 
   function jump() {
@@ -1828,9 +1912,24 @@
   motionButton.addEventListener("click", toggleMotion);
   recordButton.addEventListener("click", startRecording);
   recordingDismiss.addEventListener("click", dismissRecording);
+  shareButton.addEventListener("click", () => shareCompletedRun());
+  copyButton.addEventListener("click", () => shareCompletedRun(true));
+  dismissChallenge.addEventListener("click", () => {
+    incomingChallenge = null;
+    challengeFeedback.hidden = true;
+    const url = new URL(window.location.href);
+    for (const key of ["challenge", "score", "distance", "rescues"]) url.searchParams.delete(key);
+    try {
+      window.history.replaceState(null, "", url.href);
+    } catch {
+      // The challenge can still be dismissed when history updates are restricted.
+    }
+    renderChallengeTarget();
+    (game.state === "running" ? canvas : actionButton).focus({ preventScroll: true });
+  });
 
   overlay.addEventListener("pointerdown", (event) => {
-    if (event.target === actionButton) return;
+    if (event.target.closest("button, a, input, textarea, select, label") || game.state === "gameover") return;
     event.preventDefault();
     handleAction();
   });
@@ -1841,6 +1940,8 @@
   });
 
   window.addEventListener("keydown", (event) => {
+    if (event.ctrlKey || event.metaKey || event.altKey ||
+        event.target.closest("input, textarea, select, [contenteditable]")) return;
     if (["KeyP", "Escape"].includes(event.code)) {
       if (!["running", "paused"].includes(game.state)) return;
       event.preventDefault();
@@ -1889,6 +1990,7 @@
   registerOfflineSupport();
   resizeCanvas();
   resetGame();
+  renderChallengeTarget();
   loadSpriteAssets();
   draw();
   window.requestAnimationFrame(frame);

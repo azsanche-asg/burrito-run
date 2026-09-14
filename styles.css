@@ -145,6 +145,8 @@ h1 {
 
 .overlay-card {
   width: min(420px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
   padding: clamp(20px, 4vw, 34px);
   border: 1px solid rgba(104, 59, 38, 0.15);
   border-radius: 20px;
@@ -843,4 +845,211 @@ html.is-embedded .instructions {
     margin-top: 0;
     padding: 8px 15px;
   }
+}
+
+/* A challenge is an optional target; the game remains the main activity. */
+.challenge-target {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin-bottom: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+
+.challenge-target h2 {
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.challenge-target p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.challenge-target small {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.share-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.share-actions button,
+#dismiss-challenge {
+  min-height: 44px;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--clay-dark);
+  background: var(--paper);
+  font-size: 0.875rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+#share-challenge {
+  color: #fffaf0;
+  background: var(--green);
+}
+
+.share-actions button:hover:not(:disabled),
+#dismiss-challenge:hover {
+  box-shadow: 0 0 0 2px var(--line);
+}
+
+.share-actions button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.share-actions button:focus-visible,
+#dismiss-challenge:focus-visible,
+#challenge-copy-text:focus-visible {
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
+}
+
+.run-summary {
+  display: flex;
+  gap: 6px;
+  margin: 14px 0 18px;
+}
+
+.run-summary span {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 4px;
+  padding: 9px 5px;
+  border-radius: 10px;
+  background: rgba(151, 103, 65, 0.08);
+}
+
+.run-summary small {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.run-summary strong {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.overlay-card .challenge-feedback,
+.overlay-card .share-status {
+  display: block;
+  max-width: none;
+  color: var(--green);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.overlay-card .share-status {
+  margin: 12px 0 0;
+}
+
+.share-fallback {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.share-fallback label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+#challenge-copy-text {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fffaf0;
+  font: inherit;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.challenge-target[hidden],
+.career-stats[hidden],
+.run-summary[hidden],
+.share-actions[hidden],
+.share-fallback[hidden],
+.overlay-card .challenge-feedback[hidden],
+.overlay-card .share-status:empty {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .challenge-target {
+    flex-wrap: wrap;
+    padding: 12px;
+  }
+
+  /* Long results and copy fallbacks need real space beneath a small canvas. */
+  html:not(.is-embedded) .game-frame.is-finished .game-overlay {
+    position: relative;
+    padding: 14px;
+    background: var(--paper);
+  }
+
+  html:not(.is-embedded) .game-frame.is-finished .overlay-card {
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    padding: 8px 4px;
+    border: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .game-frame.is-finished .key-hint {
+    display: none;
+  }
+}
+
+/* Embedded games have a fixed-height viewport: keep every result control scrollable. */
+@media (max-width: 480px) {
+  html:not(.is-embedded) .game-overlay {
+    position: relative;
+    padding: 14px;
+    background: var(--paper);
+  }
+
+  html:not(.is-embedded) .overlay-card {
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+html.is-embedded .overlay-card .challenge-feedback,
+html.is-embedded .overlay-card .share-status:not(:empty) {
+  display: block;
+}
+
+html.is-embedded .overlay-card .challenge-feedback[hidden] {
+  display: none;
+}
+
+html.is-embedded .challenge-target:not([hidden]) {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 4;
+  margin: 0;
 }

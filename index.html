@@ -76,6 +76,15 @@
         </div>
       </header>
 
+      <section class="challenge-target" id="challenge-target" aria-labelledby="challenge-title" hidden>
+        <div>
+          <h2 id="challenge-title">A friend has challenged you</h2>
+          <p id="challenge-target-summary"></p>
+          <small>Friendly score challenge. Every trail is different.</small>
+        </div>
+        <button id="dismiss-challenge" type="button">Play without a target</button>
+      </section>
+
       <section class="game-frame" aria-label="Burrito Run game">
         <canvas
           id="game-canvas"
@@ -106,12 +115,27 @@
             <p id="overlay-message">
               Carry your precious cargo safely across the desert.
             </p>
-            <div class="career-stats" aria-label="Career statistics">
+            <div class="career-stats" id="career-stats" aria-label="Career statistics">
               <span><small>Runs</small><strong id="stat-runs">0</strong></span>
               <span><small>Paisanos</small><strong id="stat-rescues">0</strong></span>
               <span><small>Places</small><strong id="stat-destinations">0</strong></span>
             </div>
+            <div class="run-summary" id="run-summary" aria-label="This run" hidden>
+              <span><small>Score</small><strong id="result-score">0</strong></span>
+              <span><small>Distance</small><strong id="result-distance">0 m</strong></span>
+              <span><small>Rescues</small><strong id="result-rescues">0</strong></span>
+            </div>
+            <p class="challenge-feedback" id="challenge-feedback" role="status" hidden></p>
             <button id="action-button" type="button">Start running</button>
+            <div class="share-actions" id="share-actions" hidden>
+              <button id="share-challenge" type="button">Challenge a friend</button>
+              <button id="copy-challenge" type="button">Copy link</button>
+            </div>
+            <p class="share-status" id="share-status" role="status" aria-live="polite"></p>
+            <div class="share-fallback" id="share-fallback" hidden>
+              <label for="challenge-copy-text">Select and copy your challenge</label>
+              <textarea id="challenge-copy-text" rows="3" readonly spellcheck="false"></textarea>
+            </div>
             <span class="key-hint">Space / ↑ / tap to jump</span>
           </div>
         </div>
@@ -159,10 +183,11 @@
           href="https://www.burritoslabs.com/catalogue/burrito-run/"
           >A Burrito’s Labs game</a
         >
-        <span class="release-tag">v1.1</span>
+        <span class="release-tag">v1.2</span>
       </footer>
     </main>
 
+    <script src="challenge.js"></script>
     <script src="game.js"></script>
   </body>
 </html>

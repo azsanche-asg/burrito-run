@@ -1,9 +1,10 @@
-const CACHE_NAME = "burrito-run-v9";
+const CACHE_NAME = "burrito-run-v10";
 const CORE_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./game.js",
+  "./challenge.js",
   "./manifest.webmanifest",
   "./assets/burrito-run-icon.svg",
   "./assets/sprites/burrito-donkey-atlas.png",
