@@ -360,6 +360,7 @@
   function startGame(jumpImmediately = false) {
     resetGame();
     game.state = "running";
+    window.dispatchEvent(new CustomEvent('burritos:analytics', {detail: {event: 'game_started', game_mode: 'solo'}}));
     overlay.hidden = true;
     pauseButton.disabled = false;
     canvas.focus({ preventScroll: true });
